@@ -14,5 +14,10 @@ The postman collection has two valid Authentication Tokens (corresponding with t
 The application already has some mock data to ease your life when using the API
 
 # HOW to run
-In order to deploy the application to your cluster, please update serverless.yml with your AWS credentials profile and run
-`npm run deploy`
+In order to deploy the application to your cluster, please update serverless.yml with your AWS credentials profile and run:
+
+```
+cd backend
+npm install
+npm run deploy
+```
