@@ -1,0 +1,630 @@
+{
+	"info": {
+		"_postman_id": "7a3fee13-d9dc-4d7a-b6da-4e9a38097c1c",
+		"name": "Udacity Capstone",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Ledgers",
+			"item": [
+				{
+					"name": "Get all Ledgers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/ledgers",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"ledgers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Ledgers with Limit",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/ledgers?limit=2",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"ledgers"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Ledgers with Limit and next",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{authToken1}}"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/ledgers?limit=2&next=%7B%22ledgerId%22%3A%227c6b99dc-40a6-4469-a3f9-c2ef386e2434%22%2C%22userId%22%3A%22auth0%7C5ea4b34ca6df260bfdce0a13%22%2C%22updatedAt%22%3A%222020-04-26T14%3A39%3A18.828Z%22%7D",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"ledgers"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "next",
+									"value": "%7B%22ledgerId%22%3A%227c6b99dc-40a6-4469-a3f9-c2ef386e2434%22%2C%22userId%22%3A%22auth0%7C5ea4b34ca6df260bfdce0a13%22%2C%22updatedAt%22%3A%222020-04-26T14%3A39%3A18.828Z%22%7D"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ledger",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{authToken1}}"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/ledgers/e887ae1a-c8db-4113-84ce-7b1586b1bd93",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"ledgers",
+								"e887ae1a-c8db-4113-84ce-7b1586b1bd93"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Ledger",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken1}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bank Account db\",\n    \"description\": \"Bank account on Deutsche Bank\",\n    \"initialValue\": 800\n}"
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/ledgers",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"ledgers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Ledger",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{authToken1}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bank Account deutsche bank\",\n    \"description\": \"Bank account on Deutsche Bank\",\n    \"initialValue\": 500\n}"
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/ledgers/e887ae1a-c8db-4113-84ce-7b1586b1bd93",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"ledgers",
+								"e887ae1a-c8db-4113-84ce-7b1586b1bd93"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Ledger",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{authToken1}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/ledgers/e887ae1a-c8db-4113-84ce-7b1586b1bd93",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"ledgers",
+								"e887ae1a-c8db-4113-84ce-7b1586b1bd93"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e54ecc5c-cef1-47c6-8b17-096ba1f04720",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "eef50cfd-4513-4ff2-9959-c6ed98583bdc",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Ledger Entries",
+			"item": [
+				{
+					"name": "Get all Entries for a Ledger",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/ledgers/e887ae1a-c8db-4113-84ce-7b1586b1bd93/entries",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"ledgers",
+								"e887ae1a-c8db-4113-84ce-7b1586b1bd93",
+								"entries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Entries for a Ledger with Limit",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/ledgers/e887ae1a-c8db-4113-84ce-7b1586b1bd93/entries?limit=2",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"ledgers",
+								"e887ae1a-c8db-4113-84ce-7b1586b1bd93",
+								"entries"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Entries for a Ledger with Limit and next",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{authToken1}}"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/ledgers/e887ae1a-c8db-4113-84ce-7b1586b1bd93/entries?limit=2&next=%7B%22ledgerId%22%3A%22e887ae1a-c8db-4113-84ce-7b1586b1bd93%22%2C%22updatedAt%22%3A%222020-04-26T14%3A44%3A01.203Z%22%2C%22entryId%22%3A%22088539c6-cefb-4462-a871-d4e1890d6117%22%7D",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"ledgers",
+								"e887ae1a-c8db-4113-84ce-7b1586b1bd93",
+								"entries"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "next",
+									"value": "%7B%22ledgerId%22%3A%22e887ae1a-c8db-4113-84ce-7b1586b1bd93%22%2C%22updatedAt%22%3A%222020-04-26T14%3A44%3A01.203Z%22%2C%22entryId%22%3A%22088539c6-cefb-4462-a871-d4e1890d6117%22%7D"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Ledger Entry",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken1}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bank Account db\",\n    \"description\": \"Bank account on Deutsche Bank\",\n    \"amount\": -200\n}"
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/ledgers/e887ae1a-c8db-4113-84ce-7b1586b1bd93/entries/",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"ledgers",
+								"e887ae1a-c8db-4113-84ce-7b1586b1bd93",
+								"entries",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Ledger Entry",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{authToken1}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Groceries\",\n    \"description\": \"Groceries from the corner\",\n    \"amount\": -100\n}"
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/ledgers/e887ae1a-c8db-4113-84ce-7b1586b1bd93/entries/0054b715-95a7-4836-89c2-dc467416d71b",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"ledgers",
+								"e887ae1a-c8db-4113-84ce-7b1586b1bd93",
+								"entries",
+								"0054b715-95a7-4836-89c2-dc467416d71b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Ledger Entry",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{authToken1}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/ledgers/e887ae1a-c8db-4113-84ce-7b1586b1bd93/entries/da11f7a0-7861-4a41-b8f9-9eb8e43202ba",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"ledgers",
+								"e887ae1a-c8db-4113-84ce-7b1586b1bd93",
+								"entries",
+								"da11f7a0-7861-4a41-b8f9-9eb8e43202ba"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get attachment URL",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/todos/3836b777-9bc4-4429-9b79-ba4e4f5f91c0/attachment",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"todos",
+								"3836b777-9bc4-4429-9b79-ba4e4f5f91c0",
+								"attachment"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e9e4a883-96b5-467e-a7e5-677fc9dd5d44",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c2684c80-d3fa-444b-bcad-e03c97a5ccba",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "459eaae2-fbe2-4fa3-ab40-2c6357a0c545",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "11539317-5e2d-4af7-a4f3-2a29255c3297",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "8a9da149-6a4a-48fc-8ac6-6429564ac183",
+			"key": "apiId",
+			"value": "uyd17c5dnh",
+			"type": "string"
+		},
+		{
+			"id": "b89c8998-8cb6-484a-b992-d03a399d3fad",
+			"key": "authToken1",
+			"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwyMlktS2lHVWpTdkIyaEptcnJHdiJ9.eyJpc3MiOiJodHRwczovL2Rldi13bHYzN25kai5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVhNGIzNGNhNmRmMjYwYmZkY2UwYTEzIiwiYXVkIjoiRTVwczJUb0kxRklzSW8ybnBtOUJiTHYzQnpLQmJhRnAiLCJpYXQiOjE1ODc4ODMyNTEsImV4cCI6MTU4NzkxOTI1MSwiYXRfaGFzaCI6ImRJNmUwQVVjRUJ1NWtJRzRUSS1iTUEiLCJub25jZSI6Ik1jWU16YWFldS1xTU5keHpOTGJrSGtxcE1yaGdMd35lIn0.OkN_-X-V1As3cEzIjM5NVNUYzwsQqrUmbDMfFK2SXjcFuAA31irm_7juxYoSbF-quzgejLPGCH74D5RKcXJqv8hxcHmPiNEX2gJ8o-P_p2Te9u3cEQDknkKgw8XpFSG9YcsxUQjpsZUttNO6bfqOJOaD8LFHUNyrel8s_wS3GeG_g7kMFwiRg_bUE0wdWWW6H4w5p1VE5irKhDzHwZKnbapR_1RR6a2K6TCCfpMn-_3udfs5LjNBJcQLUvQrkuMog2p7dbPWr2cqDVFkFX7umgkRxBFkOo5VoP5N8ZZ9tx68PlQZB4fFdRsZNCtYP3-11eFW0Lrmc6cC19i73NfKnA",
+			"type": "string"
+		},
+		{
+			"id": "1accc95e-a874-4dc4-8bc5-88ddbb0abd5d",
+			"key": "authToken2",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

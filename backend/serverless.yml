@@ -1,0 +1,433 @@
+service:
+  name: serverless-ledger-app
+
+plugins:
+  - serverless-webpack
+  - serverless-iam-roles-per-function
+  - serverless-reqvalidator-plugin
+  - serverless-aws-documentation
+  - serverless-plugin-canary-deployments
+  - serverless-dynamodb-local
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  profile: serverless
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'eu-west-1'}
+
+
+  environment:
+    LEDGER_TABLE: ledger-${self:provider.stage}
+    LEDGER_INDEX: LedgerIdIndex
+    LEDGER_ENTRY_TABLE: ledger-entries-${self:provider.stage}
+    LEDGER_ENTRY_INDEX: LedgerEntryIdIndex
+    ATTACHMENT_S3_BUCKET: serverless-ledger-entry-${self:provider.stage}
+    SIGNED_URL_EXPIRATION: 300
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - codedeploy:*
+      Resource:
+        - '*'
+  
+functions:
+
+  Auth:
+    handler: src/lambda/auth/auth0Authorizer.handler
+
+  GetLedgers:
+    handler: src/lambda/http/getLedgers.handler
+    events:
+      - http:
+          method: get
+          path: ledgers
+          cors: true
+          authorizer: Auth
+          documentation:
+            summary: Get all Ledgers
+            description: Get all Ledgers for a particular user
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_TABLE}/index/${self:provider.environment.LEDGER_INDEX}
+      
+  GetLedger:
+    handler: src/lambda/http/getLedger.handler
+    events:
+      - http:
+          method: get
+          path: ledgers/{ledgerId}
+          cors: true
+          authorizer: Auth
+          documentation:
+            summary: Get a particular Ledger
+            description: Get a particular Ledger for a particular user
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_ENTRY_TABLE}/index/${self:provider.environment.LEDGER_ENTRY_INDEX}
+
+
+  CreateLedger:
+    handler: src/lambda/http/createLedger.handler
+    events:
+      - http:
+          method: post
+          path: ledgers
+          cors: true
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Create a new Ledger
+            description: Create a new Ledger
+            requestModels:
+              'application/json': CreateLedgerRequest
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_TABLE}
+
+
+  UpdateLedger:
+    handler: src/lambda/http/updateLedger.handler
+    events:
+      - http:
+          method: patch
+          path: ledgers/{ledgerId}
+          cors: true
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Update a Ledger
+            description: Update a Ledger
+            requestModels:
+              'application/json': UpdateLedgerRequest
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_TABLE}
+
+  DeleteLedger:
+    handler: src/lambda/http/deleteLedger.handler
+    events:
+      - http:
+          method: delete
+          path: ledgers/{ledgerId}
+          cors: true
+          authorizer: Auth
+          documentation:
+            summary: Delete a particular Ledger
+            description: Delete a particular Ledger for a particular user
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_TABLE}
+
+  GetLedgerEntries:
+    handler: src/lambda/http/getLedgerEntries.handler
+    events:
+      - http:
+          method: get
+          path: ledgers/{ledgerId}/entries
+          cors: true
+          authorizer: Auth
+          documentation:
+            summary: Get all Ledger Entries
+            description: Get all Ledger Entries for a particular user
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_ENTRY_TABLE}/index/${self:provider.environment.LEDGER_ENTRY_INDEX}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_TABLE}
+
+  GetLedgerEntry:
+    handler: src/lambda/http/getLedgerEntry.handler
+    events:
+      - http:
+          method: get
+          path: ledgers/{ledgerId}/entries/{entryId}
+          cors: true
+          authorizer: Auth
+          documentation:
+            summary: Get a particular Ledger Entry
+            description: Get a particular Ledger Entry for a particular user
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_ENTRY_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_TABLE}
+
+  CreateLedgerEntry:
+    handler: src/lambda/http/createLedgerEntry.handler
+    events:
+      - http:
+          method: post
+          path: ledgers/{ledgerId}/entries
+          cors: true
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Create a new Ledger Entry
+            description: Create a new Ledger Entry
+            requestModels:
+              'application/json': CreateLedgerEntryRequest
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_ENTRY_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_TABLE}
+
+  UpdateLedgerEntry:
+    handler: src/lambda/http/updateLedgerEntry.handler
+    events:
+      - http:
+          method: patch
+          path: ledgers/{ledgerId}/entries/{entryId}
+          cors: true
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Update a Ledger Entry
+            description: Update a Ledger Entry
+            requestModels:
+              'application/json': UpdateLedgerEntryRequest
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_ENTRY_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_TABLE}
+              
+
+  DeleteLedgerEntry:
+    handler: src/lambda/http/deleteLedgerEntry.handler
+    events:
+      - http:
+          method: delete
+          path: ledgers/{ledgerId}/entries/{entryId}
+          cors: true
+          authorizer: Auth
+          documentation:
+            summary: Delete a particular Ledger Entry
+            description: Delete a particular Ledger Entry for a particular Ledger
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_ENTRY_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_TABLE}
+
+
+  GenerateUploadUrl:
+    handler: src/lambda/http/generateUploadUrl.handler
+    events:
+      - http:
+          method: post
+          path: ledgers/{ledgerId}/entries/{entryId}/attachment
+          cors: true
+          uthorizer: Auth
+          documentation:
+            summary: Upload an attachment to a Ledger Entry 
+            description: Upload an attachment to a Ledger Entry 
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_ENTRY_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEDGER_TABLE}
+      - Effect: Allow
+        Action:
+          - s3:PutObject
+          - s3:GetObject
+        Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
+
+
+custom:
+  serverless-offline:
+    port: 3003
+
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+
+  documentation:
+    api:
+      info:
+        version: v1.0.0
+        title: Ledger API
+        description: Serverless application for a simple Ledger list
+    models:
+      - name: CreateLedgerRequest
+        contentType: application/json
+        schema: ${file(models/create-ledger-request.json)}
+      - name: UpdateLedgerRequest
+        contentType: application/json
+        schema: ${file(models/update-ledger-request.json)}
+      - name: CreateLedgerEntryRequest
+        contentType: application/json
+        schema: ${file(models/create-ledger-entry-request.json)}
+      - name: UpdateLedgerEntryRequest
+        contentType: application/json
+        schema: ${file(models/update-ledger-entry-request.json)}
+          
+
+resources:
+  Resources:
+    GatewayResponseDefault4XX:
+      Type: AWS::ApiGateway::GatewayResponse
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+          gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS,POST'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: ApiGatewayRestApi
+    GatewayResponseDefault5XX:
+      Type: AWS::ApiGateway::GatewayResponse
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+          gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS,POST'"
+        ResponseType: DEFAULT_5XX
+        RestApiId:
+          Ref: ApiGatewayRestApi
+    LedgersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: ledgerId
+            AttributeType: S
+          - AttributeName: updatedAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: ledgerId
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.LEDGER_TABLE}
+        LocalSecondaryIndexes:
+          - IndexName: ${self:provider.environment.LEDGER_INDEX}
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+              - AttributeName: updatedAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL # What attributes will be copied to an index
+    LedgerEntriesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: ledgerId
+            AttributeType: S
+          - AttributeName: entryId
+            AttributeType: S
+          - AttributeName: updatedAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: ledgerId
+            KeyType: HASH
+          - AttributeName: entryId
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.LEDGER_ENTRY_TABLE}
+        LocalSecondaryIndexes:
+          - IndexName: ${self:provider.environment.LEDGER_ENTRY_INDEX}
+            KeySchema:
+              - AttributeName: ledgerId
+                KeyType: HASH
+              - AttributeName: updatedAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL # What attributes will be copied to an index
+    
+    RequestBodyValidator:
+      Type: AWS::ApiGateway::RequestValidator
+      Properties:
+        Name: 'request-body-validator'
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: true
+        ValidateRequestParameters: false
+
+    AttachmentsBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.ATTACHMENT_S3_BUCKET}
+        CorsConfiguration:
+          CorsRules:
+            -
+              AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              MaxAge: 3000
+
+    BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        PolicyDocument:
+          Id: MyPolicy
+          Version: "2012-10-17"
+          Statement:
+            - Sid: PublicReadForGetBucketObjects
+              Effect: Allow
+              Principal: '*'
+              Action: 's3:GetObject'
+              Resource: 'arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*'
+        Bucket: !Ref AttachmentsBucket
