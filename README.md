@@ -5,6 +5,11 @@ A simple application to manage your personal accounts.
 # Functionality of the application
 
 This application will allow creating/removing/updating/fetching ledgers/accounts and create/remove/update and fetch entries associated with them, providing at the same time a global overview of your finances.
+You can also upload a ticket image to entries in a ledger, for that please use endpoint
+
+```
+/dev/ledgers/{{ledgerID}}/entries/{{entryId}}/attachment
+```
 
 # HOW to use
 The application will be running for a few days in AWS cluster, you can use the provided postman collection to execute calls to the API.

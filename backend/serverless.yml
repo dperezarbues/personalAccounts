@@ -17,6 +17,9 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'eu-west-1'}
 
+  tracing:
+    lambda: true
+    apiGateway: true
 
   environment:
     LEDGER_TABLE: ledger-${self:provider.stage}
