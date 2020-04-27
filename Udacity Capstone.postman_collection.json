@@ -612,13 +612,13 @@
 		{
 			"id": "b24d896a-e406-4b3e-b4e8-578652836bce",
 			"key": "apiId",
-			"value": "uyd17c5dnh",
+			"value": "",
 			"type": "string"
 		},
 		{
 			"id": "9e1d4272-128b-4b65-a7d7-3a3878dbed6c",
 			"key": "authToken1",
-			"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwyMlktS2lHVWpTdkIyaEptcnJHdiJ9.eyJpc3MiOiJodHRwczovL2Rldi13bHYzN25kai5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVhNGIzNGNhNmRmMjYwYmZkY2UwYTEzIiwiYXVkIjoiRTVwczJUb0kxRklzSW8ybnBtOUJiTHYzQnpLQmJhRnAiLCJpYXQiOjE1ODc4ODMyNTEsImV4cCI6MTU4NzkxOTI1MSwiYXRfaGFzaCI6ImRJNmUwQVVjRUJ1NWtJRzRUSS1iTUEiLCJub25jZSI6Ik1jWU16YWFldS1xTU5keHpOTGJrSGtxcE1yaGdMd35lIn0.OkN_-X-V1As3cEzIjM5NVNUYzwsQqrUmbDMfFK2SXjcFuAA31irm_7juxYoSbF-quzgejLPGCH74D5RKcXJqv8hxcHmPiNEX2gJ8o-P_p2Te9u3cEQDknkKgw8XpFSG9YcsxUQjpsZUttNO6bfqOJOaD8LFHUNyrel8s_wS3GeG_g7kMFwiRg_bUE0wdWWW6H4w5p1VE5irKhDzHwZKnbapR_1RR6a2K6TCCfpMn-_3udfs5LjNBJcQLUvQrkuMog2p7dbPWr2cqDVFkFX7umgkRxBFkOo5VoP5N8ZZ9tx68PlQZB4fFdRsZNCtYP3-11eFW0Lrmc6cC19i73NfKnA",
+			"value": "",
 			"type": "string"
 		},
 		{

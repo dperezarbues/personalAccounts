@@ -4,6 +4,7 @@
   "description": "Serverless TODO image app",
   "scripts": {
     "deploy": "sls deploy -v",
+    "undeploy": "sls remove -v",
     "dynamo:install": "sls dynamodb install",
     "dynamo:start": "sls dynamodb start",
     "offline": "sls offline"
